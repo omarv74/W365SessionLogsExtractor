@@ -1,0 +1,207 @@
+{
+    "TotalRowCount": 9,
+    "Schema": [
+        {
+            "Column": "SignInDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "CloudPcId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ActivityId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ManagedDeviceName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "SignOutDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "UsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RoundTripTimeInMsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "AvailableBandwidthInMBpsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "AvailableBandwidthInMbpsP501",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RemoteSignInTimeInSec",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "ConnectionProtocol",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ConnectionGateway",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ConnectionClientIP",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "RTTAboveThreshold",
+            "PropertyType": "SByte"
+        }
+    ],
+    "Values": [
+        [
+            "2025-11-21T02:26:41",
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "ded17d7b-9364-42ec-a971-e149f67c0000",
+            "MCAPS6157-FBTNB",
+            "2025-11-21T02:34:43",
+            0.13361111111111112,
+            59.0,
+            7.466796875,
+            59.734375,
+            63.401,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T02:28:40",
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "9943160c-7812-4108-9749-c951b3eb0000",
+            "FL6157-R6ZVGATD",
+            "2025-11-21T02:36:47",
+            0.135,
+            56.0,
+            0.0625,
+            0.5,
+            40.117,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T02:34:51",
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "dd016970-9ba6-4707-ac21-3fc802420000",
+            "MCAPS6157-FBTNB",
+            "2025-11-21T02:35:14",
+            0.006111111111111111,
+            68.0,
+            0.0625,
+            0.5,
+            4.213,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T03:13:43",
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "d94cbae2-54d8-45a6-919e-a3db954a0000",
+            "MCAPS6157-FBTNB",
+            "2025-11-21T15:36:01",
+            12.371666666666666,
+            55.0,
+            8.2431640625,
+            65.9453125,
+            26.47,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T03:21:38",
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "f98d9553-bc7f-436f-a4a6-acd374530000",
+            "FL6157-R6ZVGATD",
+            "2025-11-21T03:45:56",
+            0.405,
+            54.0,
+            7.8720703125,
+            62.9765625,
+            9.16,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T15:35:25",
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "d1c075f2-d416-429a-af0b-db0770ac0000",
+            "FL6157-R6ZVGATD",
+            "2025-11-21T15:53:27",
+            0.3005555555555556,
+            71.0,
+            0.0986328125,
+            0.7890625,
+            5.082,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T16:17:36",
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "dd2f473c-73b8-4f9a-a306-e3465a1b0000",
+            "MCAPS6157-FBTNB",
+            null,
+            2.5330555555555554,
+            54.0,
+            9.7470703125,
+            77.9765625,
+            5.006,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T16:18:21",
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "68f5803b-12bb-4a26-88e2-32f29ec20000",
+            "FL6157-R6ZVGATD",
+            "2025-11-21T17:15:20",
+            0.9497222222222222,
+            63.0,
+            7.7470703125,
+            61.9765625,
+            4.154,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ],
+        [
+            "2025-11-21T17:16:20",
+            "0618262a-e02c-456f-ab7e-ff25ec77575b",
+            "2996ceaf-f7e1-409d-b55d-9f341d160000",
+            "FL6157-YMJP8B9D",
+            "2025-11-21T18:49:47",
+            1.5575,
+            50.0,
+            8.99609375,
+            71.96875,
+            40.775,
+            "TCP Websocket",
+            "South Central US",
+            "76.184.18.79",
+            false
+        ]
+    ]
+}

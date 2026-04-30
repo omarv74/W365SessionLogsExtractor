@@ -1,0 +1,107 @@
+{
+    "TotalRowCount": 2,
+    "Schema": [
+        {
+            "Column": "CloudPcId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ManagedDeviceName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "UserPrincipalName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "DaysSinceLastSignIn",
+            "PropertyType": "Int64"
+        },
+        {
+            "Column": "TotalUsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "IntuneDeviceId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "LastActiveTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "NeverSignedIn",
+            "PropertyType": "SByte"
+        },
+        {
+            "Column": "ServicePlanId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PcType",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "CloudPCSize",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "CreatedDate",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "HostRegion",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "DeviceType",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PolicyName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PolicyId",
+            "PropertyType": "String"
+        }
+    ],
+    "Values": [
+        [
+            "817bb4e8-b430-4682-9bed-2e9f7b390363",
+            "365-mace-0ZNMU",
+            "mace@joughgcc.com",
+            4,
+            0.060000000000000005,
+            "17bd976b-4529-4572-8ffb-e67e7055ed11",
+            "2025-11-01T22:53:46",
+            false,
+            "3e69cc4a-4328-44ab-8919-989c206916ef",
+            "Windows 365 Enterprise 4 vCPU, 16 GB, 128 GB for FedRAMP",
+            "Windows 365 Enterprise 4 vCPU, 16 GB, 128 GB for FedRAMP",
+            "2025-09-08T14:15:09",
+            "centralus",
+            "Enterprise",
+            "JoughGCC W365 Ent Provisioning Policy",
+            "99c2501c-6106-4fef-a267-a4e56f229523"
+        ],
+        [
+            "305a90f3-8297-4031-9bce-1c17b5037235",
+            "365-jough-MGCOJ",
+            "jough@joughgcc.com",
+            2,
+            43.31777777777778,
+            "fa385749-049d-415a-882e-7a82e272b325",
+            "2025-11-03T20:29:46",
+            false,
+            "3e69cc4a-4328-44ab-8919-989c206916ef",
+            "Windows 365 Enterprise 4 vCPU, 16 GB, 128 GB for FedRAMP",
+            "Windows 365 Enterprise 4 vCPU, 16 GB, 128 GB for FedRAMP",
+            "2025-08-28T15:38:02",
+            "centralus",
+            "Enterprise",
+            "JoughGCC W365 Ent Provisioning Policy",
+            "99c2501c-6106-4fef-a267-a4e56f229523"
+        ]
+    ]
+}

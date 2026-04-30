@@ -1,0 +1,30 @@
+{
+    "TotalRowCount": 0,
+    "Schema": [
+        {
+            "Column": "SignInDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "SignOutDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "UsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RoundTripTimeInMsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "AvailableBandwidthInMbpsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RemoteSignInTimeInSec",
+            "PropertyType": "Double"
+        }
+    ],
+    "Values": []
+}

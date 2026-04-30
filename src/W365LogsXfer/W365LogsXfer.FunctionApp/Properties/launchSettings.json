@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "W365LogsXfer.FunctionApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7137",
+      "launchBrowser": false
+    }
+  }
+}

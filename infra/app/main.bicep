@@ -38,11 +38,11 @@ param vNetName string = ''
 @description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
 param principalId string = deployer().objectId
 
-@description('Name of the existing Log Analytics Workspace provisioned by the platform layer.')
-param existingLAWName string
+@description('Name of the existing Log Analytics Workspace provisioned by the platform layer. Leave empty to skip Log Analytics integration.')
+param existingLAWName string = ''
 
-@description('Name of the resource group where the existing Log Analytics Workspace resides.')
-param existingLAWResourceGroup string
+@description('Name of the resource group where the existing Log Analytics Workspace resides. Leave empty to skip Log Analytics integration.')
+param existingLAWResourceGroup string = ''
 
 var abbrs = loadJsonContent('../abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))

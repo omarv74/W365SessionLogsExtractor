@@ -41,9 +41,16 @@ The Azure infrastructure is split into two independently deployable layers, each
 | **Platform** | `infra/platform/main.bicep` | `rg-{env}-platform` | Log Analytics Workspace |
 | **App** | `infra/app/main.bicep` | `rg-{env}` | Function App, storage accounts, App Insights, managed identity, RBAC, optional VNet |
 
-The platform layer is designed to hold shared infrastructure that may already exist in a tenant. When it already exists, the platform deployment is idempotent — it will reuse the existing Log Analytics Workspace and simply pass its name and resource group to the app layer.
+The platform layer is designed to hold shared infrastructure that may already exist in a tenant. When deployed via `azd up`, the `preprovision` hook always deploys the platform layer idempotently — re-running it updates in place rather than creating a duplicate.
 
-The app layer receives the Log Analytics Workspace details via the `existingLAWName` and `existingLAWResourceGroup` parameters, which are populated automatically by the `preprovision` hook.
+The app layer receives the Log Analytics Workspace details via the `existingLAWName` and `existingLAWResourceGroup` parameters (both optional, defaulting to empty string):
+
+- When using `azd up`, these are populated automatically by the `preprovision` hook via the `PLATFORM_LAW_NAME` and `PLATFORM_LAW_RG` environment variables.
+- When using the composition template (`infra/main.bicep`) directly, they are driven by the `deployPlatformLayer` parameter:
+  - `deployPlatformLayer = true` — the template deploys the platform layer itself and automatically wires its Log Analytics Workspace outputs to the app layer.
+  - `deployPlatformLayer = false` *(default)* — the platform layer is skipped; supply the existing LAW details via `existingLAWName` and `existingLAWResourceGroup` (or the corresponding `PLATFORM_LAW_NAME`/`PLATFORM_LAW_RG` env vars referenced in `infra/main.parameters.json`).
+
+> **Note**: `infra/main.bicep` is a composition template for direct CLI deployments only. When using `azd up`, the entry point is `infra/app/main.bicep` (configured by `infra.path: infra/app` in `azure.yaml`); the `deployPlatformLayer` parameter has no effect on the `azd` flow.
 
 ---
 
@@ -93,6 +100,28 @@ az deployment sub create \
   --name app-<envName> \
   --template-file infra/app/main.bicep \
   --parameters infra/app/main.parameters.json \
+    existingLAWName=<lawName> \
+    existingLAWResourceGroup=<lawResourceGroup>
+```
+
+Alternatively, use the composition template (`infra/main.bicep`) to deploy both layers together in a single subscription-scoped deployment. Set `deployPlatformLayer=true` for a new environment, or `false` to reuse an existing platform layer:
+
+```powershell
+# Composition template — platform + app together (new environment)
+az deployment sub create \
+  --location <location> \
+  --name <envName> \
+  --template-file infra/main.bicep \
+  --parameters infra/main.parameters.json \
+    deployPlatformLayer=true
+
+# Composition template — app only, reusing an existing platform layer
+az deployment sub create \
+  --location <location> \
+  --name <envName> \
+  --template-file infra/main.bicep \
+  --parameters infra/main.parameters.json \
+    deployPlatformLayer=false \
     existingLAWName=<lawName> \
     existingLAWResourceGroup=<lawResourceGroup>
 ```

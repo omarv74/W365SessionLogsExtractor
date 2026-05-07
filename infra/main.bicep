@@ -41,8 +41,17 @@ param principalId string = deployer().objectId
 @description('Name of the resource group for the platform layer (Log Analytics Workspace). Defaults to rg-{environmentName}-platform.')
 param platformResourceGroupName string = 'rg-${environmentName}-platform'
 
+@description('Set to true to deploy the platform layer (Log Analytics Workspace). Set to false to skip platform deployment, e.g. when the platform already exists.')
+param deployPlatformLayer bool = false
+
+@description('Name of an existing Log Analytics Workspace to use when deployPlatformLayer is false. Ignored when deployPlatformLayer is true.')
+param existingLAWName string = ''
+
+@description('Resource group of the existing Log Analytics Workspace to use when deployPlatformLayer is false. Ignored when deployPlatformLayer is true.')
+param existingLAWResourceGroup string = ''
+
 // Deploy platform layer (Log Analytics Workspace)
-module platform './platform/main.bicep' = {
+module platform './platform/main.bicep' = if (deployPlatformLayer) {
   name: 'platform'
   params: {
     environmentName: environmentName
@@ -66,8 +75,8 @@ module app './app/main.bicep' = {
     storageAccountName: storageAccountName
     vNetName: vNetName
     principalId: principalId
-    existingLAWName: platform.outputs.lawName
-    existingLAWResourceGroup: platform.outputs.lawResourceGroupName
+    existingLAWName: deployPlatformLayer ? platform.outputs.lawName : existingLAWName
+    existingLAWResourceGroup: deployPlatformLayer ? platform.outputs.lawResourceGroupName : existingLAWResourceGroup
   }
 }
 

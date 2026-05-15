@@ -1,4 +1,4 @@
-# Windows 365 Session CloudPC Logs Extractor
+# Windows 365 CloudPC Session Logs Extractor
 
 This repository contains an Azure Functions application that extracts Windows 365 Cloud PC session logs from the Microsoft Graph API and writes them to Azure Blob Storage for analysis. The infrastructure is defined in Bicep and can be provisioned and deployed using the Azure Developer CLI (`azd`).
 

@@ -15,6 +15,9 @@ __table*
 *.userosscache
 *.sln.docstates
 
+# C# Dev Kit language service cache
+*.csproj.lscache
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

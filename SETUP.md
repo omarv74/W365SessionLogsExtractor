@@ -88,11 +88,8 @@ Each layer can also be deployed directly with the Azure CLI, bypassing `azd` ent
 
 ```powershell
 # Platform layer only
-az deployment sub create \
-  --location <location> \
-  --name platform-<envName> \
-  --template-file infra/platform/main.bicep \
-  --parameters infra/platform/main.parameters.json
+
+  az deployment sub create --location "westus" --name platform-01 --template-file platform/main.bicep --parameters platform/main.parameters.json --parameters platformResourceGroupName="rg-itss-w365-audit-logs-dev"
 
 # App layer only (requires LAW to already exist)
 az deployment sub create \

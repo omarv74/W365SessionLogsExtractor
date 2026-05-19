@@ -22,6 +22,9 @@
     },
     "resourceGroupName": {
       "value": "${AZURE_RESOURCE_GROUP}"
+    },
+    "appStorageAccountName": {
+      "value": "${APP_STORAGE_ACCOUNT_NAME}"
     }
   }
 }

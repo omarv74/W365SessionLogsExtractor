@@ -33,7 +33,7 @@ param apiUserAssignedIdentityName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
 param resourceGroupName string = 'rg-${environmentName}'
-param appStorageAccountName 
+param appStorageAccountName string
 param vNetName string = ''
 @description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
 param principalId string = deployer().objectId
@@ -94,7 +94,7 @@ module storage 'br/public:avm/res/storage/storage-account:0.8.3' = {
   name: 'storage'
   scope: rg
   params: {
-    name: !empty(storageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}${resourceToken}'
+    name: '${abbrs.storageStorageAccounts}${resourceToken}'
     allowBlobPublicAccess: false
     allowSharedKeyAccess: false
     dnsEndpointType: 'Standard'

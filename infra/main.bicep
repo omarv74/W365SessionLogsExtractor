@@ -72,7 +72,7 @@ module app './app/main.bicep' = {
     applicationInsightsName: applicationInsightsName
     appServicePlanName: appServicePlanName
     resourceGroupName: resourceGroupName
-    storageAccountName: storageAccountName
+    appStorageAccountName: storageAccountName
     vNetName: vNetName
     principalId: principalId
     existingLAWName: deployPlatformLayer ? platform.outputs.lawName : existingLAWName

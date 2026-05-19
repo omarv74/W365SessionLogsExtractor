@@ -28,7 +28,7 @@ param environmentName string
 param location string
 
 param logAnalyticsName string = ''
-param platformResourceGroupName string = 'rg-${environmentName}-platform'
+param platformResourceGroupName string = 'rg-${environmentName}'
 
 var abbrs = loadJsonContent('../abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, platformResourceGroupName, location))

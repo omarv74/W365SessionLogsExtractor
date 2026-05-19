@@ -33,7 +33,7 @@ param apiUserAssignedIdentityName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
 param resourceGroupName string = 'rg-${environmentName}'
-param storageAccountName string = ''
+param appStorageAccountName 
 param vNetName string = ''
 @description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
 param principalId string = deployer().objectId
@@ -130,7 +130,7 @@ module storageW365Logs 'br/public:avm/res/storage/storage-account:0.8.3' = {
   scope: rg
   params: {
     #disable-next-line simplify-interpolation 
-    name: '${take('${abbrs.storageStorageAccounts}${toLower(uniqueString(subscription().id, environmentName, location, 'w365logs'))}', 24)}'
+    name: take(toLower('${abbrs.storageStorageAccounts}${trim(appStorageAccountName)}'), 24)
     allowBlobPublicAccess: true // ToDo: Revert to: false
     allowSharedKeyAccess: false
     dnsEndpointType: 'Standard'

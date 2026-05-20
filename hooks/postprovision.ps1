@@ -57,6 +57,8 @@ $miSPID = $ManagedIdentityPrincipalId
 
 Write-Host "Managed identity object ID: $miSPID"
 
+try {
+
 # ── Microsoft Graph constants ──────────────────────────────────────────────────
 # Microsoft Graph service principal app ID (well-known, constant across all tenants)
 $graphAppId  = '00000003-0000-0000-c000-000000000000'
@@ -103,3 +105,8 @@ New-MgServicePrincipalAppRoleAssignment `
     -AppRoleId          $CloudPcReadAllRole.Id
 
 Write-Host "CloudPC.Read.All successfully granted to managed identity $miSPID."
+
+} catch {
+    Write-Error "An unexpected error occurred: $_"
+    exit 1
+}

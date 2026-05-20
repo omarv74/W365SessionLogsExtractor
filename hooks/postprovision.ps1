@@ -13,16 +13,47 @@
 # Environment variables injected by azd from Bicep outputs:
 #   MANAGED_IDENTITY_PRINCIPAL_ID  – object ID of the user-assigned managed identity
 
-param()
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$ManagedIdentityPrincipalId
+)
 
 $ErrorActionPreference = 'Stop'
 
-# ── Resolve managed identity object ID ────────────────────────────────────────
-$miSPID = (azd env get-value MANAGED_IDENTITY_PRINCIPAL_ID) # $env:MANAGED_IDENTITY_PRINCIPAL_ID
-if ([string]::IsNullOrWhiteSpace($miSPID)) {
-    Write-Error "MANAGED_IDENTITY_PRINCIPAL_ID is not set. Ensure the Bicep output is defined in main.bicep."
-    exit 1
+# ── Validation helper ──────────────────────────────────────────────────────────
+function Test-AzureObjectId {
+    param([string]$Value)
+    return $Value -match '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
 }
+
+# ── Resolve managed identity object ID ────────────────────────────────────────
+# Attempt to resolve the managed identity object ID from environment variables if not provided as a parameter
+if ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
+    $ManagedIdentityPrincipalId = (azd env get-value MANAGED_IDENTITY_PRINCIPAL_ID 2>$null)
+    if ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
+        $ManagedIdentityPrincipalId = $env:MANAGED_IDENTITY_PRINCIPAL_ID
+    }
+}
+
+# Validate the managed identity object ID format if we have a value at this point
+if (-not [string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
+    if (-not (Test-AzureObjectId -Value $ManagedIdentityPrincipalId)) {
+        Write-Warning "The value '$ManagedIdentityPrincipalId' does not look like a valid Azure object ID (expected a GUID)."
+        $ManagedIdentityPrincipalId = $null
+    }
+}
+
+# If we still don't have a valid managed identity object ID, prompt the user to enter it
+while ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId) -or -not (Test-AzureObjectId -Value $ManagedIdentityPrincipalId)) {
+    $input = Read-Host "Enter the managed identity object ID (GUID)"
+    if (-not (Test-AzureObjectId -Value $input)) {
+        Write-Warning "'$input' is not a valid Azure object ID. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    } else {
+        $ManagedIdentityPrincipalId = $input
+    }
+}
+
+$miSPID = $ManagedIdentityPrincipalId
 
 Write-Host "Managed identity object ID: $miSPID"
 

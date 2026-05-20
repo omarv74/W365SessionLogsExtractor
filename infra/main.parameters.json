@@ -14,8 +14,14 @@
     "vnetEnabled": {
       "value": "${VNET_ENABLED}"
     },
-    "platformResourceGroupName": {
-      "value": "${AZURE_PLATFORM_RG_NAME}"
+    "appStorageAccountName": {
+      "value": "${APP_STORAGE_ACCOUNT_NAME}"
+    },
+    "appRGName": {
+      "value": "${APP_RG_NAME}"
+    },
+    "platformRGName": {
+      "value": "${PLATFORM_RG_NAME}"
     },
     "deployPlatformLayer": {
       "value": "${DEPLOY_PLATFORM_LAYER}"

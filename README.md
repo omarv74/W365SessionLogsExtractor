@@ -70,3 +70,9 @@ When `vnetEnabled = true`, the Bicep provisions:
 
 > **Note**: The current Bicep contains open TODOs to also set `publicNetworkAccess: 'Disabled'` and `defaultAction: 'Deny'` on both storage accounts when `vnetEnabled = true`. Until those TODOs are resolved, the storage accounts remain publicly reachable even in VNet-enabled deployments. Review [`infra/app/main.bicep`](infra/app/main.bicep) before deploying to a production environment.
 
+
+
+AZURE_ENV_NAME="W365Logs-SingleRG03"
+AZURE_RESOURCE_GROUP="rg-BAD-$(azd env get-value AZURE_ENV_NAME)"
+
+azd env set AZURE_RESOURCE_GROUP="rg-app-$(azd env get-value AZURE_ENV_NAME)" VNET_ENABLED="true" AZURE_REGION="centralus" AZURE_LOCATION="centralus" PLATFORM_RG_NAME="rg-app-$(azd env get-value AZURE_ENV_NAME)" APP_RG_NAME="rg-app-$(azd env get-value AZURE_ENV_NAME)" AZURE_SUBSCRIPTION_ID="748e6349-00e9-4051-9f9f-6de25d8cc477" APP_STORAGE_ACCOUNT_NAME="w365files"

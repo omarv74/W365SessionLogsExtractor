@@ -1,5 +1,3 @@
-targetScope = 'subscription'
-
 @minLength(1)
 @maxLength(64)
 @description('Name of the the environment which is used to generate a short unique hash used in all resources.')
@@ -27,19 +25,19 @@ param environmentName string
 })
 param location string
 
-param vnetEnabled bool
+param vnetEnabled bool = true
 param apiServiceName string = ''
 param apiUserAssignedIdentityName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
-param resourceGroupName string = 'rg-${environmentName}'
-param storageAccountName string = ''
+param appRGName string
+param appStorageAccountName string = ''
 param vNetName string = ''
 @description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
 param principalId string = deployer().objectId
 
 @description('Name of the resource group for the platform layer (Log Analytics Workspace). Defaults to rg-{environmentName}-platform.')
-param platformResourceGroupName string = 'rg-${environmentName}-platform'
+param platformRGName string 
 
 @description('Set to true to deploy the platform layer (Log Analytics Workspace). Set to false to skip platform deployment, e.g. when the platform already exists.')
 param deployPlatformLayer bool = false
@@ -53,16 +51,17 @@ param existingLAWResourceGroup string = ''
 // Deploy platform layer (Log Analytics Workspace)
 module platform './platform/main.bicep' = if (deployPlatformLayer) {
   name: 'platform'
+  scope: resourceGroup(platformRGName)
   params: {
     environmentName: environmentName
     location: location
-    platformResourceGroupName: platformResourceGroupName
   }
 }
 
 // Deploy app layer, consuming outputs from the platform layer
 module app './app/main.bicep' = {
   name: 'app'
+  scope: resourceGroup(appRGName)
   params: {
     environmentName: environmentName
     location: location
@@ -71,8 +70,7 @@ module app './app/main.bicep' = {
     apiUserAssignedIdentityName: apiUserAssignedIdentityName
     applicationInsightsName: applicationInsightsName
     appServicePlanName: appServicePlanName
-    resourceGroupName: resourceGroupName
-    appStorageAccountName: storageAccountName
+    appStorageAccountName: appStorageAccountName
     vNetName: vNetName
     principalId: principalId
     existingLAWName: deployPlatformLayer ? platform.outputs.lawName : existingLAWName

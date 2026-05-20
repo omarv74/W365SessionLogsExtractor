@@ -101,7 +101,7 @@ try {
 
     # ── Check for existing assignment to avoid duplicate ──────────────────────────
     $existing = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $miSPID |
-    Where-Object { $_.AppRoleId -eq $CloudPcReadAllRole -and $_.ResourceId -eq $GraphSp.Id }
+    Where-Object { $_.AppRoleId -eq $CloudPcReadAllRole.Id -and $_.ResourceId -eq $GraphSp.Id }
 
     if ($null -ne $existing) {
         Write-Host "CloudPC.Read.All is already assigned to the managed identity. No action needed."

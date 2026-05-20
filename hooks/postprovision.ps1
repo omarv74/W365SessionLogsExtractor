@@ -67,16 +67,28 @@ try {
 
     # ── Connect to Microsoft Graph ─────────────────────────────────────────────────
     Write-Host "Connecting to Microsoft Graph..."
-    Connect-MgGraph -NoWelcome -Scopes 'AppRoleAssignment.ReadWrite.All', "Directory.Read.All", "Application.Read.All"
+    try {
+        Connect-MgGraph -NoWelcome -Scopes 'AppRoleAssignment.ReadWrite.All', "Directory.Read.All", "Application.Read.All"
+    } catch {
+        Write-Error "Failed to connect to Microsoft Graph. Ensure you have the required permissions and that the Microsoft.Graph module is installed.`nDetail: $_"
+        exit 1
+    }
 
 
     # Get the Microsoft Graph Service Principal (using the well-known appId)
     $GraphSp = Get-MgServicePrincipal -Filter "appId eq '$graphAppId'"
-    # $graphAppId  = $GraphSp.AppId
+    if ($null -eq $GraphSp) {
+        Write-Error "Microsoft Graph service principal (appId: $graphAppId) was not found in this tenant."
+        exit 1
+    }
     Write-Host "Microsoft Graph service principal found. AppId: $graphAppId"
 
     # Get the CloudPC.Read.All app role ID from the Microsoft Graph service principal in the current tenant.
     $CloudPcReadAllRole = $GraphSp.AppRoles | Where-Object { $_.Value -eq "CloudPC.Read.All" -and $_.AllowedMemberTypes -contains "Application" }
+    if ($null -eq $CloudPcReadAllRole) {
+        Write-Error "The 'CloudPC.Read.All' application role was not found on the Microsoft Graph service principal. Verify the role name and that it is available in this environment."
+        exit 1
+    }
 
 
     # # ── Resolve the Microsoft Graph service principal in this tenant ───────────────

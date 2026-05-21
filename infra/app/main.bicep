@@ -30,19 +30,12 @@ param location string
 param vnetEnabled bool
 param apiServiceName string = ''
 param apiUserAssignedIdentityName string = ''
-param applicationInsightsName string = ''
 param appServicePlanName string = ''
 param resourceGroupName string = 'rg-${environmentName}'
 param appStorageAccountName string
 param vNetName string = ''
 @description('Id of the user identity to be used for testing and debugging. This is not required in production. Leave empty if not needed.')
 param principalId string = deployer().objectId
-
-@description('Name of the existing Log Analytics Workspace provisioned by the platform layer. Leave empty to skip Log Analytics integration.')
-param existingLAWName string = ''
-
-@description('Name of the resource group where the existing Log Analytics Workspace resides. Leave empty to skip Log Analytics integration.')
-param existingLAWResourceGroup string = ''
 
 var abbrs = loadJsonContent('../abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
@@ -54,12 +47,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
   location: location
   tags: tags
-}
-
-// Reference the existing Log Analytics Workspace provisioned by the platform layer
-resource existingLaw 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
-  name: existingLAWName
-  scope: resourceGroup(existingLAWResourceGroup)
 }
 
 // User assigned managed identity to be used by the function app to reach storage and other dependencies
@@ -151,18 +138,6 @@ module storageW365Logs 'br/public:avm/res/storage/storage-account:0.8.3' = {
   }
 }
 
-module monitoring 'br/public:avm/res/insights/component:0.6.0' = {
-  name: '${uniqueString(deployment().name, location)}-appinsights'
-  scope: rg
-  params: {
-    name: !empty(applicationInsightsName) ? applicationInsightsName : '${abbrs.insightsComponents}${resourceToken}'
-    location: location
-    tags: tags
-    workspaceResourceId: existingLaw.id
-    disableLocalAuth: true
-  }
-}
-
 module api './api.bicep' = {
   name: 'api'
   scope: rg
@@ -170,7 +145,6 @@ module api './api.bicep' = {
     name: functionAppName
     location: location
     tags: tags
-    applicationInsightsName: monitoring.outputs.name
     appServicePlanId: appServicePlan.outputs.resourceId
     runtimeName: 'dotnet-isolated'
     runtimeVersion: '10.0'
@@ -196,7 +170,6 @@ module rbac './rbac.bicep' = {
   params: {
     storageAccountName: storage.outputs.name
     storageW365LogsAccountName: storageW365Logs.outputs.name
-    appInsightsName: monitoring.outputs.name
     managedIdentityPrincipalId: apiUserAssignedIdentity.outputs.principalId
     userIdentityPrincipalId: principalId
     enableBlob: storageEndpointConfig.enableBlob

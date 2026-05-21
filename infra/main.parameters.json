@@ -13,18 +13,6 @@
     },
     "vnetEnabled": {
       "value": "${VNET_ENABLED}"
-    },
-    "platformResourceGroupName": {
-      "value": "${AZURE_PLATFORM_RG_NAME}"
-    },
-    "deployPlatformLayer": {
-      "value": "${DEPLOY_PLATFORM_LAYER}"
-    },
-    "existingLAWName": {
-      "value": "${PLATFORM_LAW_NAME}"
-    },
-    "existingLAWResourceGroup": {
-      "value": "${PLATFORM_LAW_RG}"
     }
   }
 }

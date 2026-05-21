@@ -12,13 +12,13 @@ services:
     host: function
 
 hooks:
-  preprovision:
+  # preprovision:
+  #   - shell: pwsh
+  #     run: hooks/preprovision.ps1
+  #     interactive: true
+  #     continueOnError: false
+  postprovision:
     - shell: pwsh
-      run: hooks/preprovision.ps1
+      run: hooks/postprovision.ps1
       interactive: true
       continueOnError: false
-#   postprovision:
-#     - shell: pwsh
-#       run: hooks/postprovision.ps1
-#       interactive: true
-#       continueOnError: false

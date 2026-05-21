@@ -14,12 +14,6 @@
     "vnetEnabled": {
       "value": "${VNET_ENABLED}"
     },
-    "existingLAWName": {
-      "value": "${PLATFORM_LAW_NAME}"
-    },
-    "existingLAWResourceGroup": {
-      "value": "${PLATFORM_LAW_RG}"
-    },
     "resourceGroupName": {
       "value": "${AZURE_RESOURCE_GROUP}"
     },

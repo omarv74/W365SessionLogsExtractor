@@ -2,7 +2,6 @@ param name string
 @description('Primary location for all resources & Flex Consumption Function App')
 param location string = resourceGroup().location
 param tags object = {}
-param applicationInsightsName string = ''
 param appServicePlanId string
 param appSettings object = {}
 param runtimeName string 
@@ -23,18 +22,12 @@ param enableFile bool = false
 @allowed(['SystemAssigned', 'UserAssigned'])
 param identityType string = 'UserAssigned'
 
-var applicationInsightsIdentity = 'ClientId=${identityClientId};Authorization=AAD'
 var kind = 'functionapp,linux'
 
 // Create base application settings
 var baseAppSettings = {
-  // Only include required credential settings unconditionally
   AzureWebJobsStorage__credential: 'managedidentity'
   AzureWebJobsStorage__clientId: identityClientId
-  
-  // Application Insights settings are always included
-  APPLICATIONINSIGHTS_AUTHENTICATION_STRING: applicationInsightsIdentity
-  APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
 }
 
 // Dynamically build storage endpoint settings based on feature flags
@@ -55,10 +48,6 @@ var allAppSettings = union(
 
 resource stg 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
-}
-
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = if (!empty(applicationInsightsName)) {
-  name: applicationInsightsName
 }
 
 // Create a Flex Consumption Function App to host the API

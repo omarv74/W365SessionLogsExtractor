@@ -57,7 +57,6 @@ if ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
 # Validate the managed identity object ID format if we have a value at this point
 if (-not [string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
     if (-not (Test-AzureObjectId -Value $ManagedIdentityPrincipalId)) {
-        Write-Host "The value '$ManagedIdentityPrincipalId' does not look like a valid Azure object ID (expected a GUID)." -ForegroundColor Yellow
         Write-Log "The value '$ManagedIdentityPrincipalId' does not look like a valid Azure object ID (expected a GUID)." -Level WARN
         $ManagedIdentityPrincipalId = $null
     }
@@ -67,7 +66,6 @@ if (-not [string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
 while ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId) -or -not (Test-AzureObjectId -Value $ManagedIdentityPrincipalId)) {
     $input = Read-Host "Enter the managed identity object ID (GUID)"
     if (-not (Test-AzureObjectId -Value $input)) {
-        Write-Host "'$input' is not a valid Azure object ID. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -ForegroundColor Yellow
         Write-Log "'$input' is not a valid Azure object ID. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Level WARN
     }
     else {
@@ -77,7 +75,7 @@ while ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId) -or -not (Test-
 
 $miSPID = $ManagedIdentityPrincipalId
 
-Write-Log "Script started. Managed identity object ID: $miSPID"
+Write-Log "*** Script started. Managed identity object ID: $miSPID"
 
 try {
 
@@ -92,16 +90,65 @@ try {
         Connect-MgGraph -NoWelcome -Scopes 'AppRoleAssignment.ReadWrite.All', "Directory.Read.All", "Application.Read.All"
         Write-Log "Successfully connected to Microsoft Graph."
     } catch {
-        Write-Host "Failed to connect to Microsoft Graph. Ensure you have the required permissions and that the Microsoft.Graph module is installed. Detail: $_" -ForegroundColor Red
         Write-Log "Failed to connect to Microsoft Graph. Ensure you have the required permissions and that the Microsoft.Graph module is installed. Detail: $_" -Level ERROR
         exit 1
+    }
+
+    # ── Pre-flight: verify caller has the required permissions ────────────────────
+    Write-Log "Verifying caller permissions..."
+
+    $callerContext = Get-MgContext
+    Write-Log "Signed in as: $($callerContext.Account) (AuthType: $($callerContext.AuthType))"
+
+    # Hard check: the token must include AppRoleAssignment.ReadWrite.All
+    $requiredScope = 'AppRoleAssignment.ReadWrite.All'
+    Write-Log "Checking for required scope '$requiredScope' in the token..."
+    if ($callerContext.Scopes -notcontains $requiredScope) {
+        Write-Log "Required scope '$requiredScope' missing. Ensure admin consent has been granted for this application. Granted scopes: $($callerContext.Scopes -join ', ')" -Level ERROR
+        exit 1
+    }
+    Write-Log "Required scope '$requiredScope' confirmed in token."
+
+    # Advisory check: verify the caller holds a directory role that permits app role assignments.
+    # Role template IDs are well-known and constant across all tenants.
+    $permittedRoleTemplateIds = @(
+        '62e90394-69f5-4237-9190-012177145e10', # Global Administrator
+        'e8611ab8-c189-46e8-94e1-60213ab1f814', # Privileged Role Administrator
+        '9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3'  # Application Administrator
+    )
+    try {
+        # Depending on the authentication type, the caller can be a user (delegated auth) or a service principal (application auth). We need to query the appropriate Microsoft Graph endpoint to get their directory roles.
+        $callerRoleTemplateIds = if ($callerContext.AuthType -eq 'Delegated') {
+            # For delegated auth, the caller is a user. Get their directory roles via /me/memberOf.
+            Write-Log "For delegated auth, the caller is a user. Get their directory roles via /me/memberOf."
+            $meId = (Get-MgMe -Property Id).Id
+            Get-MgUserTransitiveMemberOf -UserId $meId -All |
+                Where-Object { $_.AdditionalProperties['@odata.type'] -eq '#microsoft.graph.directoryRole' } |
+                ForEach-Object { $_.AdditionalProperties['roleTemplateId'] }
+        } else {
+            # For application auth, the caller is a service principal. Get their directory roles via /servicePrincipals/{id}/memberOf.
+            Write-Log "For application auth, the caller is a service principal. Get their directory roles via /servicePrincipals/{id}/memberOf."
+            $callerSp = Get-MgServicePrincipal -Filter "appId eq '$($callerContext.ClientId)'"
+            Get-MgServicePrincipalTransitiveMemberOf -ServicePrincipalId $callerSp.Id -All |
+                Where-Object { $_.AdditionalProperties['@odata.type'] -eq '#microsoft.graph.directoryRole' } |
+                ForEach-Object { $_.AdditionalProperties['roleTemplateId'] }
+        }
+
+        # Check if any of the caller's directory role template IDs match the permitted list
+        $matchedRoleTemplateId = $callerRoleTemplateIds | Where-Object { $permittedRoleTemplateIds -contains $_ } | Select-Object -First 1
+        if ($matchedRoleTemplateId) {
+            Write-Log "Caller holds a directory role authorized to assign app roles (templateId: $matchedRoleTemplateId)."
+        } else {
+            Write-Log "Caller does not appear to hold Global Administrator, Privileged Role Administrator, or Application Administrator. The assignment may fail with 403." -Level WARN
+        }
+    } catch {
+        Write-Log "Could not enumerate caller's directory roles. Proceeding — the assignment will fail if permissions are insufficient. Detail: $_" -Level WARN
     }
 
 
     # Get the Microsoft Graph Service Principal (using the well-known appId)
     $GraphSp = Get-MgServicePrincipal -Filter "appId eq '$graphAppId'"
     if ($null -eq $GraphSp) {
-        Write-Host "Microsoft Graph service principal (appId: $graphAppId) was not found in this tenant." -ForegroundColor Red
         Write-Log "Microsoft Graph service principal (appId: $graphAppId) was not found in this tenant." -Level ERROR
         exit 1
     }
@@ -110,7 +157,6 @@ try {
     # Get the CloudPC.Read.All app role ID from the Microsoft Graph service principal in the current tenant.
     $CloudPcReadAllRole = $GraphSp.AppRoles | Where-Object { $_.Value -eq "CloudPC.Read.All" -and $_.AllowedMemberTypes -contains "Application" }
     if ($null -eq $CloudPcReadAllRole) {
-        Write-Host "The 'CloudPC.Read.All' application role was not found on the Microsoft Graph service principal. Verify the role name and that it is available in this environment." -ForegroundColor Red
         Write-Log "The 'CloudPC.Read.All' application role was not found on the Microsoft Graph service principal. Verify the role name and that it is available in this environment." -Level ERROR
         exit 1
     }
@@ -148,7 +194,6 @@ try {
 
 }
 catch {
-    Write-Host "An unexpected error occurred: $_" -ForegroundColor Red
     Write-Log "An unexpected error occurred: $_" -Level ERROR
     exit 1
 }

@@ -50,7 +50,7 @@ The `infra/main.bicep` file at the repository root is a lightweight composition 
 ### Environment variables setup example
 
 ```shell
-azd env set AZURE_RESOURCE_GROUP="rg-$(azd env get-value AZURE_ENV_NAME)" VNET_ENABLED="false" AZURE_LOCATION="centralus" AZURE_SUBSCRIPTION_ID="<your_subscription_id>" APP_STORAGE_ACCOUNT_NAME="w365files"
+azd env set AZURE_RESOURCE_GROUP="rg-$(azd env get-value AZURE_ENV_NAME)" VNET_ENABLED="true" AZURE_LOCATION="centralus" APP_STORAGE_ACCOUNT_NAME="w365files"
 ```
 
 Run the following command from the repository root. It provisions all Azure infrastructure and deploys the Function App in a single step:

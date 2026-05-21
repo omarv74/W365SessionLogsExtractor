@@ -56,6 +56,12 @@ The app layer receives the Log Analytics Workspace details via the `existingLAWN
 
 ## Deploy
 
+### Environment variables setup example
+
+```shell
+azd env set AZURE_RESOURCE_GROUP="rg-$(azd env get-value AZURE_ENV_NAME)" VNET_ENABLED="true" AZURE_REGION="westus" AZURE_LOCATION="centralus" PLATFORM_RG_NAME="rg-$(azd env get-value AZURE_ENV_NAME)" APP_RG_NAME="rg-$(azd env get-value AZURE_ENV_NAME)" AZURE_SUBSCRIPTION_ID="<your_subscription_id>" APP_STORAGE_ACCOUNT_NAME="w365files"
+```
+
 Run the following command from the repository root. It provisions all Azure infrastructure and deploys the Function App in a single step:
 
 ```shell

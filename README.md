@@ -12,7 +12,6 @@ The Function App leverages a Beta version of a Microsoft Graph API that surfaces
 - [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite) (for local Azure Storage emulation during development)
 - [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?pivots=programming-language-csharp#install-the-azure-functions-core-tools)
 - [Azure Developer CLI (`azd`)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd) (for provisioning and deploying to Azure)
-- [Azure CLI (`az`)](https://learn.microsoft.com/cli/azure/install-azure-cli) (required by the `preprovision` hook, which deploys the platform layer — a shared Log Analytics Workspace — as a separate subscription-scoped deployment before the app layer is provisioned)
 - An active **Azure subscription** with permissions to create resource groups and deploy resources
 - A **Microsoft Entra ID identity** (your developer account or a managed identity) with the following permissions granted:
   - `CloudPC.Read.All` (Microsoft Graph application permission) — required to call the Windows 365 Graph API endpoint `GET /beta/deviceManagement/virtualEndpoint/reports/getTotalAggregatedRemoteConnectionReports`
@@ -28,7 +27,7 @@ The Function App leverages a Beta version of a Microsoft Graph API that surfaces
 
 - An active **Azure subscription** with Contributor access to the target subscription where the resources will be provisioned
 - The **Azure Developer CLI (`azd`)** installed and configured to authenticate to the target subscription
-- The **Azure CLI (`az`)** installed and authenticated to the target subscription (used by the `preprovision` hook to deploy the platform layer)
+- The **Azure CLI (`az`)** installed and authenticated to the target subscription.
 - The **Microsoft Graph permission** `AppRoleAssignment.ReadWrite.All` (or Global Administrator) to allow the postprovision hook to assign application roles to managed identities
 
 **Note**: For additional requirements and deployment instructions, see [SETUP.md](SETUP.md).  

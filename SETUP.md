@@ -13,7 +13,7 @@ The script is **interactive** — the `Connect-MgGraph` cmdlet triggers an authe
 ## Prerequisites
 
 | Requirement | Notes |
-|---|---|
+| --- | --- |
 | [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd) | `azd` orchestrates provisioning and deployment |
 | [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | Required to build the Function App |
 | [PowerShell 7+](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) | Required for the `postprovision` hook |
@@ -36,7 +36,7 @@ if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
 All Azure infrastructure is defined in a single layer under `infra/app/`:
 
 | Bicep entry point | Resource group | Contains |
-|---|---|---|
+| --- | --- | --- |
 | `infra/app/main.bicep` | `rg-{env}` | Function App (Flex Consumption), App Service Plan, two storage accounts (functions backing + W365 logs), Application Insights, user-assigned managed identity, RBAC role assignments, optional VNet with private endpoints |
 
 When using `azd up`, the entry point is `infra/app/main.bicep` (configured by `infra.path: infra/app` in `azure.yaml`).

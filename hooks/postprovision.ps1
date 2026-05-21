@@ -64,12 +64,12 @@ if (-not [string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId)) {
 
 # If we still don't have a valid managed identity object ID, prompt the user to enter it
 while ([string]::IsNullOrWhiteSpace($ManagedIdentityPrincipalId) -or -not (Test-AzureObjectId -Value $ManagedIdentityPrincipalId)) {
-    $input = Read-Host "Enter the managed identity object ID (GUID)"
-    if (-not (Test-AzureObjectId -Value $input)) {
-        Write-Log "'$input' is not a valid Azure object ID. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Level WARN
+    $userInput = Read-Host "Enter the managed identity object ID (GUID)"
+    if (-not (Test-AzureObjectId -Value $userInput)) {
+        Write-Log "'$userInput' is not a valid Azure object ID. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Level WARN
     }
     else {
-        $ManagedIdentityPrincipalId = $input
+        $ManagedIdentityPrincipalId = $userInput
     }
 }
 
@@ -184,13 +184,18 @@ try {
     # ── Assign CloudPC.Read.All ────────────────────────────────────────────────────
     Write-Log "Assigning CloudPC.Read.All to managed identity..."
 
-    New-MgServicePrincipalAppRoleAssignment `
+    $assignment = New-MgServicePrincipalAppRoleAssignment `
         -ServicePrincipalId $miSPID `
         -PrincipalId        $miSPID `
         -ResourceId         $GraphSp.Id `
         -AppRoleId          $CloudPcReadAllRole.Id
 
     Write-Log "CloudPC.Read.All successfully granted to managed identity $miSPID."
+    Write-Log "Assignment Id:          $($assignment.Id)"
+    Write-Log "Assignment AppRoleId:   $($assignment.AppRoleId)"
+    Write-Log "Assignment PrincipalId: $($assignment.PrincipalId)"
+    Write-Log "Assignment ResourceId:  $($assignment.ResourceId)"
+    Write-Log "Assignment CreatedDateTime: $($assignment.CreatedDateTime)"
 
 }
 catch {

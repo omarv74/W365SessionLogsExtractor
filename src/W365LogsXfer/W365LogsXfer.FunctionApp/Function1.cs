@@ -39,21 +39,25 @@ public class Function1
         {
             const string containerName = "w365logs-inbound";
             var timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss");
-            var blobName = $"getTotalAggregatedRemoteConnectionReports_{timestamp}.csv";
+            var aggregatedBlobName = $"getTotalAggregatedRemoteConnectionReports_{timestamp}.csv";
+            var detailBlobName = $"getRemoteConnectionHistoricalReports_{timestamp}.csv";
 
             _logger.LogInformation("[{RequestId}] Fetching Cloud PC connection report from Microsoft Graph", requestId);
             var fetchStopwatch = Stopwatch.StartNew();
-            var report = await _graphReportsService.GetTotalAggregatedRemoteConnectionReportsAsync(ct);
+            var aggregatedReport = await _graphReportsService.GetTotalAggregatedRemoteConnectionReportsAsync(ct);
             fetchStopwatch.Stop();
             _logger.LogInformation("[{RequestId}] Graph API returned {RowCount} rows in {ElapsedMs}ms",
-                requestId, report.TotalRowCount, fetchStopwatch.ElapsedMilliseconds);
+                requestId, aggregatedReport.TotalRowCount, fetchStopwatch.ElapsedMilliseconds);
 
-            var csv = BuildCsv(report);
+            var aggregatedCsv = BuildCsv(aggregatedReport);
+            var detailReport = await BuildFlattenedDetailReportAsync(aggregatedReport, ct);
+            var detailCsv = BuildCsv(detailReport);
 
             _logger.LogInformation("[{RequestId}] Uploading '{BlobName}' to container '{ContainerName}'",
-                requestId, blobName, containerName);
+                requestId, aggregatedBlobName, containerName);
             var uploadStopwatch = Stopwatch.StartNew();
-            await _blobUploadService.UploadAsync(containerName, blobName, csv, ct);
+            await _blobUploadService.UploadAsync(containerName, aggregatedBlobName, aggregatedCsv, ct);
+            await _blobUploadService.UploadAsync(containerName, detailBlobName, detailCsv, ct);
             uploadStopwatch.Stop();
             _logger.LogInformation("[{RequestId}] Upload completed in {ElapsedMs}ms",
                 requestId, uploadStopwatch.ElapsedMilliseconds);
@@ -68,8 +72,10 @@ public class Function1
                 Message = "Report saved successfully.",
                 RequestId = requestId,
                 Container = containerName,
-                Blob = blobName,
-                TotalRowCount = report.TotalRowCount,
+                AggregatedBlob = aggregatedBlobName,
+                DetailBlob = detailBlobName,
+                AggregatedTotalRowCount = aggregatedReport.TotalRowCount,
+                DetailTotalRowCount = detailReport.TotalRowCount,
                 FetchTimeMs = fetchStopwatch.ElapsedMilliseconds,
                 UploadTimeMs = uploadStopwatch.ElapsedMilliseconds,
                 TotalTimeMs = stopwatch.ElapsedMilliseconds,
@@ -104,6 +110,54 @@ public class Function1
         foreach (var row in report.Rows)
             sb.AppendLine(string.Join(",", row.Select(EscapeCsvField)));
         return sb.ToString();
+    }
+
+    private async Task<CloudPcConnectionReport> BuildFlattenedDetailReportAsync(
+        CloudPcConnectionReport aggregatedReport,
+        CancellationToken cancellationToken)
+    {
+        var cloudPcIdColumnIndex = GetCloudPcIdColumnIndex(aggregatedReport.Columns);
+        IReadOnlyList<string>? detailColumns = null;
+        var flattenedRows = new List<IReadOnlyList<string?>>();
+
+        foreach (var aggregatedRow in aggregatedReport.Rows)
+        {
+            var cloudPcId = aggregatedRow[cloudPcIdColumnIndex];
+            if (string.IsNullOrWhiteSpace(cloudPcId))
+            {
+                _logger.LogWarning("Skipping aggregated row without CloudPcId.");
+                continue;
+            }
+
+            var detailReport = await _graphReportsService.GetRemoteConnectionHistoricalReportsAsync(cloudPcId, cancellationToken);
+            detailColumns ??= detailReport.Columns;
+
+            foreach (var detailRow in detailReport.Rows)
+            {
+                var flattenedRow = new List<string?>(aggregatedRow.Count + detailRow.Count);
+                flattenedRow.AddRange(aggregatedRow);
+                flattenedRow.AddRange(detailRow);
+                flattenedRows.Add(flattenedRow);
+            }
+        }
+
+        return new CloudPcConnectionReport
+        {
+            TotalRowCount = flattenedRows.Count,
+            Columns = aggregatedReport.Columns.Concat(detailColumns ?? []).ToList().AsReadOnly(),
+            Rows = flattenedRows.AsReadOnly()
+        };
+    }
+
+    private static int GetCloudPcIdColumnIndex(IReadOnlyList<string> columns)
+    {
+        for (var i = 0; i < columns.Count; i++)
+        {
+            if (string.Equals(columns[i], "CloudPcId", StringComparison.OrdinalIgnoreCase))
+                return i;
+        }
+
+        throw new InvalidOperationException("CloudPcId column was not found in aggregated report.");
     }
 
     private static string EscapeCsvField(string? value)

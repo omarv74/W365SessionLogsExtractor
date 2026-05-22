@@ -1,8 +1,10 @@
 # Windows 365 CloudPC Session Logs Extractor
 
-This repository contains an Azure Functions application that extracts Windows 365 Cloud PC session logs from the Microsoft Graph API and writes them to Azure Blob Storage for analysis. The infrastructure is defined in Bicep and can be provisioned and deployed using the Azure Developer CLI (`azd`).
+This repository contains an Azure Functions application that extracts Windows 365 Cloud PC session logs from Microsoft Graph APIs and writes them to Azure Blob Storage for analysis. The infrastructure is defined in Bicep and can be provisioned and deployed using the Azure Developer CLI (`azd`).
 
-The Function App leverages a Beta version of a Microsoft Graph API that surfaces Windows 365 Cloud PC session logs: `GET /beta/deviceManagement/virtualEndpoint/reports/getTotalAggregatedRemoteConnectionReports`.  
+The Function App leverages Beta Microsoft Graph report APIs to generate two CSV files per execution:
+- Aggregated report: `POST /beta/deviceManagement/virtualEndpoint/reports/getTotalAggregatedRemoteConnectionReports`
+- Detail report: `POST /beta/deviceManagement/virtualEndpoint/reports/getRemoteConnectionHistoricalReports` (called once per aggregated `CloudPcId`)
 
 ## Prerequisites for development
 
@@ -68,4 +70,3 @@ When `vnetEnabled = true`, the Bicep provisions:
 - Private endpoints for the **W365 logs storage account** (Blob)
 
 > **Note**: The current Bicep contains open TODOs to also set `publicNetworkAccess: 'Disabled'` and `defaultAction: 'Deny'` on both storage accounts when `vnetEnabled = true`. Until those TODOs are resolved, the storage accounts remain publicly reachable even in VNet-enabled deployments. Review [`infra/app/main.bicep`](infra/app/main.bicep) before deploying to a production environment.
-

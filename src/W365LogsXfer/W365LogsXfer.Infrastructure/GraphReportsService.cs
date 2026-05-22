@@ -72,7 +72,23 @@ internal sealed class GraphReportsService : IGraphReportsService
         return await ExecuteReportRequestAsync(HistoricalReportsEndpoint, new
         {
             filter = $"CloudPcId eq '{safeCloudPcId}'",
-            select = HistoricalReportSelectColumns,
+            select = new[]
+            {
+                "SignInDateTime",
+                "CloudPcId",
+                "ActivityId",
+                "ManagedDeviceName",
+                "SignOutDateTime",
+                "UsageInHour",
+                "RoundTripTimeInMsP50",
+                "AvailableBandwidthInMBpsP50",
+                "AvailableBandwidthInMbpsP501",
+                "RemoteSignInTimeInSec",
+                "ConnectionProtocol",
+                "ConnectionGateway",
+                "ConnectionClientIP",
+                "RTTAboveThreshold"
+            },
             top = 25,
             skip = 0
         }, cancellationToken);

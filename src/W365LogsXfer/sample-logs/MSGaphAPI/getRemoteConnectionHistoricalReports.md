@@ -2,9 +2,9 @@
 
 ## getRemoteConnectionHistoricalReports
   
-https://learn.microsoft.com/en-us/graph/api/cloudpcreports-getremoteconnectionhistoricalreports?view=graph-rest-beta&tabs=http
+https://learn.microsoft.com/en-us/graph/api/cloudpcreports-getremoteconnectionhistoricalreports?view=graph-rest-beta&tabs=csharp
 
-OData **filter** syntax: https://learn.microsoft.com/en-us/graph/filter-query-parameter?tabs=http  
+OData **filter** syntax: https://learn.microsoft.com/en-us/graph/filter-query-parameter?tabs=csharp  
 OData **query** syntax: https://learn.microsoft.com/en-us/odata/concepts/queryoptions-overview  
   
 ## Test Request body examples

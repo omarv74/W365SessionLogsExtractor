@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="W365LogsXFer.Application/W365LogsXFer.Application.csproj" />
+  <Project Path="W365LogsXfer.FunctionApp/W365LogsXfer.FunctionApp.csproj" />
+  <Project Path="W365LogsXfer.Infrastructure/W365LogsXfer.Infrastructure.csproj" />
+</Solution>

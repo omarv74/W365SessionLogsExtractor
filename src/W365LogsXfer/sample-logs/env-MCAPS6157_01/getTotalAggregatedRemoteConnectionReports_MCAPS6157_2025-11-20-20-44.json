@@ -1,0 +1,80 @@
+{
+    "TotalRowCount": 5,
+    "Schema": [
+        {
+            "Column": "CloudPcId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ManagedDeviceName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "UserPrincipalName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "TotalUsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "LastActiveTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "PcType",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "CreatedDate",
+            "PropertyType": "DateTime"
+        }
+    ],
+    "Values": [
+        [
+            "f59ed3ff-6df9-46ed-badc-84e9394bbb9f",
+            "CPC-admin-FVZHL",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0.0,
+            null,
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "2025-01-16T17:52:05"
+        ],
+        [
+            "f9142ff4-aebf-4974-bc36-1299767ada0c",
+            "CPC-admin-TCED5",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0.0,
+            null,
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "2025-01-16T18:29:44"
+        ],
+        [
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "FL6157-R6ZVGATD",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0.0,
+            "2025-11-21T02:36:47",
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "2025-11-20T22:59:08"
+        ],
+        [
+            "0618262a-e02c-456f-ab7e-ff25ec77575b",
+            "FL6157-YMJP8B9D",
+            "",
+            0.0,
+            null,
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "2025-11-20T22:59:08"
+        ],
+        [
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "MCAPS6157-FBTNB",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0.0,
+            "2025-11-21T02:35:14",
+            "Cloud PC Enterprise 4vCPU/16GB/256GB",
+            "2025-11-20T22:39:29"
+        ]
+    ]
+}

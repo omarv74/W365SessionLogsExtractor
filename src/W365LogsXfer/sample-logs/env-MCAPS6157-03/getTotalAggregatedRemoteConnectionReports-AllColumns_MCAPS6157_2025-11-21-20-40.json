@@ -1,0 +1,161 @@
+{
+    "TotalRowCount": 5,
+    "Schema": [
+        {
+            "Column": "CloudPcId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "ManagedDeviceName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "UserPrincipalName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "DaysSinceLastSignIn",
+            "PropertyType": "Int64"
+        },
+        {
+            "Column": "TotalUsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "IntuneDeviceId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "LastActiveTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "NeverSignedIn",
+            "PropertyType": "SByte"
+        },
+        {
+            "Column": "ServicePlanId",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PcType",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "CloudPCSize",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "CreatedDate",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "HostRegion",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "DeviceType",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PolicyName",
+            "PropertyType": "String"
+        },
+        {
+            "Column": "PolicyId",
+            "PropertyType": "String"
+        }
+    ],
+    "Values": [
+        [
+            "f59ed3ff-6df9-46ed-badc-84e9394bbb9f",
+            "CPC-admin-FVZHL",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            null,
+            0.0,
+            "336c72a5-422e-430b-bc91-ec2dafbc292b",
+            null,
+            true,
+            "6d61d90a-3a56-4a79-8d16-42ecb88cd564",
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "2025-01-16T17:52:05",
+            "eastus2",
+            "Enterprise",
+            "DevMPPTeamMessaging-MPPTeamMessagingSystem-LEARN-DevProdWShop_2025-01-16-e1f7b502-6ec4-4a45-be74-59f2587c55ec",
+            "6e21aec8-caeb-4bb3-894c-b1c834a374a6"
+        ],
+        [
+            "f9142ff4-aebf-4974-bc36-1299767ada0c",
+            "CPC-admin-TCED5",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            null,
+            0.0,
+            "0671371d-4b82-4012-8d64-77e8bcd529e8",
+            null,
+            true,
+            "6d61d90a-3a56-4a79-8d16-42ecb88cd564",
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "Microsoft Dev Box 8vCPU/32GB/256GB",
+            "2025-01-16T18:29:44",
+            "eastus2",
+            "Enterprise",
+            "DevMPPTeamMessaging-MPPTeamMessagingSystem-LEARN-DevProdWShop_2025-01-16-e1f7b502-6ec4-4a45-be74-59f2587c55ec",
+            "6e21aec8-caeb-4bb3-894c-b1c834a374a6"
+        ],
+        [
+            "de70be1a-48dd-4292-a29e-8894de7506e5",
+            "FL6157-R6ZVGATD",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0,
+            0.0,
+            "c4eb65e4-cf2c-43cc-acc2-8dbf4969e696",
+            "2025-11-21T17:15:20",
+            false,
+            "dd3801e2-4aa1-4b16-a44b-243e55497584",
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "2025-11-20T22:59:08",
+            "centralus",
+            "FrontlineShared",
+            "",
+            "47efdd89-eab4-4cb1-b353-0c2b6f0f0c83"
+        ],
+        [
+            "0618262a-e02c-456f-ab7e-ff25ec77575b",
+            "FL6157-YMJP8B9D",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0,
+            0.0,
+            "25fb98e0-ee60-4d7b-8275-0e0fc504d103",
+            "2025-11-21T18:49:47",
+            false,
+            "dd3801e2-4aa1-4b16-a44b-243e55497584",
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "Cloud PC Frontline 4vCPU/16GB/128GB",
+            "2025-11-20T22:59:08",
+            "centralus",
+            "FrontlineShared",
+            "",
+            "47efdd89-eab4-4cb1-b353-0c2b6f0f0c83"
+        ],
+        [
+            "7c936662-c312-48b6-bf28-f336d40a0adc",
+            "MCAPS6157-FBTNB",
+            "admin@MngEnvMCAP986157.onmicrosoft.com",
+            0,
+            0.0,
+            "bfe50959-836a-421e-aa1b-42860fa28822",
+            "2025-11-21T22:40:57",
+            false,
+            "9ecf691d-8b82-46cb-b254-cd061b2c02fb",
+            "Cloud PC Enterprise 4vCPU/16GB/256GB",
+            "Cloud PC Enterprise 4vCPU/16GB/256GB",
+            "2025-11-20T22:39:29",
+            "centralus",
+            "Enterprise",
+            "",
+            "0f8cfbfc-3c8d-4b0d-98d0-7ba7e01045d4"
+        ]
+    ]
+}

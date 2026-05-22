@@ -1,0 +1,71 @@
+{
+    "TotalRowCount": 5,
+    "Schema": [
+        {
+            "Column": "SignInDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "SignOutDateTime",
+            "PropertyType": "DateTime"
+        },
+        {
+            "Column": "UsageInHour",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RoundTripTimeInMsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "AvailableBandwidthInMbpsP50",
+            "PropertyType": "Double"
+        },
+        {
+            "Column": "RemoteSignInTimeInSec",
+            "PropertyType": "Double"
+        }
+    ],
+    "Values": [
+        [
+            "2025-11-21T02:26:41",
+            "2025-11-21T02:34:43",
+            0.13361111111111112,
+            59.0,
+            59.734375,
+            63.401
+        ],
+        [
+            "2025-11-21T02:28:40",
+            "2025-11-21T02:36:47",
+            0.135,
+            56.0,
+            0.5,
+            40.117
+        ],
+        [
+            "2025-11-21T02:34:51",
+            "2025-11-21T02:35:14",
+            0.006111111111111111,
+            68.0,
+            0.5,
+            4.213
+        ],
+        [
+            "2025-11-21T03:13:43",
+            null,
+            0.24027777777777778,
+            53.0,
+            31.8671875,
+            26.47
+        ],
+        [
+            "2025-11-21T03:21:38",
+            "2025-11-21T03:45:56",
+            0.405,
+            54.0,
+            62.9765625,
+            9.16
+        ]
+    ]
+}

@@ -116,6 +116,7 @@ internal sealed class GraphReportsService : IGraphReportsService
             "Calling Graph API: POST {Endpoint}. Request payload: {RequestPayload}",
             endpoint,
             TruncateForLog(requestPayload));
+        _logger.LogInformation("Graph API RequestBody: {RequestBody}", TruncateForLog(requestPayload));
         using var response = await _httpClient.SendAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {

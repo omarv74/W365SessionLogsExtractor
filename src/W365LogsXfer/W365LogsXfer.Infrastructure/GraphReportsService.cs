@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using Azure.Core;
+using Microsoft.Graph.Beta.DeviceManagement.VirtualEndpoint.Reports.GetRemoteConnectionHistoricalReports;
 using Microsoft.Extensions.Logging;
 using W365LogsXFer.Application;
 
@@ -68,12 +69,11 @@ internal sealed class GraphReportsService : IGraphReportsService
             throw new ArgumentException("CloudPcId must be provided.", nameof(cloudPcId));
 
         var safeCloudPcId = cloudPcId.Replace("'", "''", StringComparison.Ordinal);
-
-        return await ExecuteReportRequestAsync(HistoricalReportsEndpoint, new
+        var requestBody = new GetRemoteConnectionHistoricalReportsPostRequestBody
         {
-            filter = $"CloudPcId eq '{safeCloudPcId}'",
-            select = new[]
-            {
+            Filter = $"CloudPcId eq '{safeCloudPcId}'",
+            Select =
+            [
                 "SignInDateTime",
                 "CloudPcId",
                 "ActivityId",
@@ -88,10 +88,12 @@ internal sealed class GraphReportsService : IGraphReportsService
                 "ConnectionGateway",
                 "ConnectionClientIP",
                 "RTTAboveThreshold"
-            },
-            top = 25,
-            skip = 0
-        }, cancellationToken);
+            ],
+            Top = 25,
+            Skip = 0
+        };
+
+        return await ExecuteReportRequestAsync(HistoricalReportsEndpoint, requestBody, cancellationToken);
     }
 
     private async Task<CloudPcConnectionReport> ExecuteReportRequestAsync(

@@ -16,6 +16,7 @@ internal sealed class GraphReportsService : IGraphReportsService
         "https://graph.microsoft.com/beta/deviceManagement/virtualEndpoint/reports/getRemoteConnectionHistoricalReports");
     private static readonly string[] GraphScopes = ["https://graph.microsoft.com/.default"];
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+    private const int MaxLoggedPayloadLength = 4096;
     private static readonly string[] HistoricalReportSelectColumns =
     [
         "SignInDateTime",
@@ -111,9 +112,27 @@ internal sealed class GraphReportsService : IGraphReportsService
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
         request.Content = new StringContent(requestPayload, Encoding.UTF8, "application/json");
 
-        _logger.LogInformation("Calling Graph API: POST {Endpoint}", endpoint);
+        _logger.LogInformation(
+            "Calling Graph API: POST {Endpoint}. Request payload: {RequestPayload}",
+            endpoint,
+            TruncateForLog(requestPayload));
         using var response = await _httpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogError(
+                "Graph API call failed. Endpoint: {Endpoint}. Status: {StatusCode} ({ReasonPhrase}). Request payload: {RequestPayload}. Response body: {ResponseBody}",
+                endpoint,
+                (int)response.StatusCode,
+                response.ReasonPhrase,
+                TruncateForLog(requestPayload),
+                TruncateForLog(errorContent));
+
+            throw new HttpRequestException(
+                $"Graph API call failed for endpoint '{endpoint}' with status code {(int)response.StatusCode} ({response.ReasonPhrase}). Response body: {TruncateForLog(errorContent)}",
+                null,
+                response.StatusCode);
+        }
 
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
         var raw = JsonSerializer.Deserialize<RawReport>(json, JsonOptions)
@@ -138,4 +157,12 @@ internal sealed class GraphReportsService : IGraphReportsService
 
     private sealed record RawReport(int TotalRowCount, List<ColumnSchema> Schema, List<List<JsonElement>> Values);
     private sealed record ColumnSchema(string Column, string PropertyType);
+
+    private static string TruncateForLog(string? value)
+    {
+        if (string.IsNullOrEmpty(value) || value.Length <= MaxLoggedPayloadLength)
+            return value ?? string.Empty;
+
+        return string.Concat(value.AsSpan(0, MaxLoggedPayloadLength), "... [truncated]");
+    }
 }
